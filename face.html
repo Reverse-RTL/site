@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reverse RTL | Professional Text Reversal Tool</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4895ef;
+      --danger-color: #f72585;
+      --success-color: #4cc9f0;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      width: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      overflow: hidden;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+      color: #e0e0e0;
+    }
+
+    /* Header Styles */
+    .app-header {
+      background: rgba(0, 10, 36, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      border-bottom: 1px solid rgba(67, 97, 238, 0.3);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      font-size: 24px;
+      color: var(--accent-color);
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #4895ef, #4cc9f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-center ul {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-center a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+    }
+
+    .nav-center a:hover {
+      background: rgba(67, 97, 238, 0.2);
+    }
+
+    .nav-center a.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .nav-center i {
+      font-size: 0.9rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      overflow: auto;
+      position: relative;
+      background: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png');
+    }
+
+    .tool-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .tool-header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #4cc9f0, #4895ef);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tool-description {
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+      color: #a0aec0;
+      line-height: 1.6;
+    }
+
+    .rectangle-container {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      align-items: stretch;
+      max-width: 1400px;
+      margin: 0 auto;
+      background: rgba(19, 23, 42, 0.6);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      border: 1px solid rgba(67, 97, 238, 0.2);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .text-box-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 400px;
+    }
+
+    .direction-label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      margin-bottom: 0.8rem;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    /* Text Areas */
+    #input-box, #output-box {
+      flex: 1;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(67, 97, 238, 0.3);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      resize: none;
+      transition: var(--transition);
+      background: rgba(13, 17, 33, 0.7);
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #input-box {
+      direction: rtl;
+    }
+
+    #input-box::placeholder {
+      color: #5c6b8a;
+    }
+
+    #output-box {
+      direction: ltr;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    /* Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .action-button {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .save-btn {
+      background: linear-gradient(to right, #094355, #3a86ff);
+    }
+
+    .copy-btn {
+      background: linear-gradient(to right, #609fe8, #4361ee);
+    }
+
+    .export-btn {
+      background: linear-gradient(to right, #3f37c9, #560bad);
+    }
+
+    .action-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #reverse-button {
+      align-self: center;
+      padding: 1.2rem 2rem;
+      background: linear-gradient(to right, #f72585, #b5179e);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.1rem;
+      box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
+    }
+
+    #reverse-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(247, 37, 133, 0.4);
+    }
+
+    /* History Page */
+    .history-page {
+      display: none;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .back-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn:hover {
+      background: var(--secondary-color);
+    }
+
+    .history-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+    }
+
+    .search-box {
+      flex: 1;
+      position: relative;
+      max-width: 500px;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+    }
+
+    #history-search {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .history-item {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+    }
+
+    .history-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .history-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .history-time {
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+
+    .delete-item {
+      background: none;
+      border: none;
+      color: var(--danger-color);
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .history-content {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .history-original, .history-reversed {
+      flex: 1;
+    }
+
+    .history-label {
+      font-size: 0.8rem;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .history-text {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-radius: calc(var(--border-radius) / 2);
+      white-space: pre-wrap;
+    }
+
+    /* Footer */
+    .app-footer {
+      background: rgba(0, 10, 36, 0.9);
+      padding: 1.2rem 2rem;
+      text-align: center;
+      color: #a0aec0;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(67, 97, 238, 0.2);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: #a0aec0;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-color);
+    }
+
+    /* Toast Notification */
+    .toast-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--success-color);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .toast-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .rectangle-container {
+        flex-direction: column;
+      }
+      
+      .text-box-container {
+        min-height: 300px;
+        width: 100%;
+      }
+      
+      .nav-center ul {
+        gap: 0.8rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      
+      .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .tool-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .main-content {
+        padding: 1.5rem;
+      }
+      
+      .rectangle-container {
+        padding: 1.5rem;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      #reverse-button {
+        width: 100%;
+        margin-top: 1rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+     </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-exchange-alt"></i>
+        </div>
+        <div class="logo-text">Reverse RTL</div>
+      </div>
+      
+      <nav class="nav-center">
+        <ul>
+          <li><a href="#" class="active" id="home-link"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="#" id="history-link"><i class="fas fa-history"></i> History</a></li>
+          <li><a href="#" id="feedback-link"><i class="fas fa-comment-alt"></i> Feedback</a></li>
+        </ul>
+      </nav>
+    </header>
+    
+    <main class="main-content" id="main-content">
+      <div class="tool-header">
+        <h1>Reverse RTL Text</h1>
+        <p class="tool-description">
+          Reverse right-to-left languages (Arabic, Hebrew, Persian (Farsi), Urdu, Dari, Kurdish (Sorani), Aramaic, Yiddish, Syriac, Mandaic) to make them readable in unsupported apps. 
+
+        </p>
+      </div>
+      
+      <div class="rectangle-container">
+        <div class="text-box-container">
+          <div class="direction-label">
+            <i class="fas fa-align-right"></i> RTL (Arabic Input)
+          </div>
+          <textarea id="input-box" placeholder="← اكتب النص هنا..."></textarea>
+          <div class="action-buttons">
+            <button id="export-input" class="action-button export-btn">
+              <i class="fas fa-file-export"></i> Export Original
+            </button>
+          </div>
+        </div>
+
+        <button id="reverse-button" class="floating">
+          <i class="fas fa-exchange-alt"></i> Reverse Text
+        </button>
+
+        <div class="text-box-container">
+          <div class="direction-label">
+            <i class="fas fa-align-left"></i> LTR (Reversed Output)
+          </div>
+          <div id="output-box"></div>
+          <div class="action-buttons">
+            <button id="save-button" class="action-button save-btn">
+              <i class="fas fa-save"></i> Save
+            </button>
+            <button id="copy-button" class="action-button copy-btn">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+            <button id="export-output" class="action-button export-btn">
+              <i class="fas fa-file-export"></i> Export
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- History Page (hidden by default) -->
+    <div class="history-page" id="history-page">
+      <div class="history-header">
+        <h1><i class="fas fa-history"></i> Saved Reversals</h1>
+        <button id="back-button" class="back-btn">
+          <i class="fas fa-arrow-left"></i> Back to Tool
+        </button>
+      </div>
+      
+      <div class="history-controls">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="history-search" placeholder="Search saved items...">
+        </div>
+        <button id="clear-history" class="action-button danger-btn">
+          <i class="fas fa-trash"></i> Clear All
+        </button>
+      </div>
+      
+      <div class="history-list" id="history-list">
+        <!-- Items will be inserted here by JavaScript -->
+        <div class="history-item">
+          <div class="history-item-header">
+            <div class="history-time">June 1, 2025 - 00:00</div>
+            <button class="delete-item">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="history-content">
+            <div class="history-original">
+              <div class="history-label">Original Text</div>
+              <div class="history-text">مرحبا بالعالم</div>
+            </div>
+            <div class="history-reversed">
+              <div class="history-label">Reversed Text</div>
+              <div class="history-text">ملاعب ابحرم</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="history-item">
+          <div class="history-item-header">
+            <div class="history-time">June 1, 2023 - 09:15</div>
+            <button class="delete-item">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="history-content">
+            <div class="history-original">
+              <div class="history-label">Original Text</div>
+              <div class="history-text">كيف حالك اليوم؟</div>
+            </div>
+            <div class="history-reversed">
+              <div class="history-label">Reversed Text</div>
+              <div class="history-text">؟موليك لحاف يك</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div class="copyright">
+          &copy; 2025 Reverse RTL. All rights reserved.
+        </div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+<div class="feedback-page" id="feedback-page">
+  <div class="feedback-container">
+    <button id="close-feedback" class="close-btn">
+      <i class="fas fa-times"></i>
+    </button>
+    
+    <h2><i class="fas fa-comment-alt"></i> Help Improve Reverse RTL</h2>
+    
+    <div class="disclaimer-box">
+      <p>⚠️ <strong>Note from the developer:</strong> I'm new to web development but 
+      deeply committed to improving this tool. Your feedback means the world to me!</p>
+    </div>
+    
+    <form id="feedback-form">
+      <div class="form-group">
+        <label for="feedback-type">Type of feedback:</label>
+        <select id="feedback-type" required>
+          <option value="">-- Select --</option>
+          <option value="bug">Bug Report</option>
+          <option value="suggestion">Feature Suggestion</option>
+          <option value="general">General Feedback</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="user-email">Email (optional):</label>
+        <input type="email" id="user-email" placeholder="you@example.com">
+      </div>
+      
+      <div class="form-group">
+        <label for="feedback-text">Your feedback:</label>
+        <textarea id="feedback-text" required placeholder="Please describe in detail..."></textarea>
+      </div>
+      
+      <button type="submit" class="submit-btn">
+        <i class="fas fa-paper-plane"></i> Send Feedback
+      </button>
+    </form>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // DOM Elements
+      const inputBox = document.getElementById('input-box');
+      const outputBox = document.getElementById('output-box');
+      const reverseButton = document.getElementById('reverse-button');
+      const copyButton = document.getElementById('copy-button');
+      const saveButton = document.getElementById('save-button');
+      const exportInput = document.getElementById('export-input');
+      const exportOutput = document.getElementById('export-output');
+      
+      // Navigation elements
+      const homeLink = document.getElementById('home-link');
+      const historyLink = document.getElementById('history-link');
+      const mainContent = document.getElementById('main-content');
+      const historyPage = document.getElementById('history-page');
+      const backButton = document.getElementById('back-button');
+      
+      // History elements
+      const historyList = document.getElementById('history-list');
+      const historySearch = document.getElementById('history-search');
+      const clearHistory = document.getElementById('clear-history');
+      
+      // Toast notification
+      const toast = document.createElement('div');
+      toast.className = 'toast-notification';
+      document.body.appendChild(toast);
+      
+      // Initialize with example text
+       inputBox.value = "‫مرحبا بالعالم‬ / ‫שלום עולם‬ / ‫سلام دنیا‬"; 
+      reverseText();
+      
+      // Event Listeners
+      inputBox.addEventListener('input', reverseText);
+      reverseButton.addEventListener('click', reverseText);
+      copyButton.addEventListener('click', copyToClipboard);
+      saveButton.addEventListener('click', saveToHistory);
+      exportInput.addEventListener('click', () => exportText(inputBox.value, 'original'));
+      exportOutput.addEventListener('click', () => exportText(outputBox.textContent, 'reversed'));
+      
+      // Navigation
+      historyLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showHistoryPage();
+      });
+      
+      homeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showMainPage();
+      });
+      
+      backButton.addEventListener('click', showMainPage);
+      
+      // History functionality
+      clearHistory.addEventListener('click', clearAllHistory);
+      historySearch.addEventListener('input', filterHistory);
+      
+      // Add event listeners to delete buttons
+      document.querySelectorAll('.delete-item').forEach(btn => {
+        btn.addEventListener('click', function() {
+          this.closest('.history-item').remove();
+          showToast('Item deleted');
+        });
+      });
+      
+      // Core Functions
+      function reverseText() {
+        const text = inputBox.value;
+        const reversed = text.split('\n')
+          .map(line => [...line].reverse().join(''))
+          .join('\n');
+        outputBox.textContent = reversed;
+      }
+      
+      function copyToClipboard() {
+        if (!outputBox.textContent) return;
+        
+        navigator.clipboard.writeText(outputBox.textContent)
+          .then(() => {
+            showToast('Text copied to clipboard!');
+          })
+          .catch(err => {
+            console.error('Copy failed:', err);
+            showToast('Failed to copy text');
+          });
+      }
+      
+      function saveToHistory() {
+        if (!inputBox.value.trim() || !outputBox.textContent.trim()) {
+          showToast('Please enter text to save');
+          return;
+        }
+        
+        // Create new history item
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        
+        const now = new Date();
+        const timeString = now.toLocaleDateString() + ' - ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        historyItem.innerHTML = `
+          <div class="history-item-header">
+            <div class="history-time">${timeString}</div>
+            <button class="delete-item">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="history-content">
+            <div class="history-original">
+              <div class="history-label">Original Text</div>
+              <div class="history-text">${inputBox.value}</div>
+            </div>
+            <div class="history-reversed">
+              <div class="history-label">Reversed Text</div>
+              <div class="history-text">${outputBox.textContent}</div>
+            </div>
+          </div>
+        `;
+        
+        // Add to top of history list
+        historyList.insertBefore(historyItem, historyList.firstChild);
+        
+        // Add event listener to delete button
+        historyItem.querySelector('.delete-item').addEventListener('click', function() {
+          this.closest('.history-item').remove();
+          showToast('Item deleted');
+        });
+        
+        showToast('Text saved to history!');
+      }
+      
+      function exportText(text, type) {
+        if (!text.trim()) {
+          showToast('No text to export');
+          return;
+        }
+        
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reversed_${type}_${new Date().toISOString().slice(0,10)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast(`Exported ${type} text`);
+      }
+      
+      function showHistoryPage() {
+        mainContent.style.display = 'none';
+        historyPage.style.display = 'block';
+      }
+      
+      function showMainPage() {
+        historyPage.style.display = 'none';
+        mainContent.style.display = 'block';
+      }
+      
+      function filterHistory() {
+        const searchTerm = historySearch.value.toLowerCase();
+        const items = historyList.querySelectorAll('.history-item');
+        
+        items.forEach(item => {
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+      }
+      
+      function clearAllHistory() {
+        if (!confirm('Are you sure you want to clear all history?')) return;
+        
+        historyList.innerHTML = '';
+        showToast('History cleared');
+      }
+      
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+      }
+      
+      // Add some animation to the reverse button
+      reverseButton.addEventListener('mouseenter', () => {
+        reverseButton.classList.remove('floating');
+      });
+      
+      reverseButton.addEventListener('mouseleave', () => {
+        reverseButton.classList.add('floating');
+      });
+    });
+  </script>
+</body>
+</html>
